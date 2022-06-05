@@ -98,4 +98,7 @@ dependencies {
     implementation "androidx.room:room-rxjava2:2.4.2"
 
     //implementation "androidx.activity:activity-ktx:1.4.0"
+
+    //Lottie
+    implementation "com.airbnb.android:lottie:4.1.0"
 }
