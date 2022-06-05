@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NasaAPOD</string>
+    <string name="cd_home">Home fragment</string>
+    <string name="ch_favorite">Favorite fragment</string>
+
+    <string name="nav_title_home">Home</string>
+    <string name="nav_title_favorite">Favorite</string>
 </resources>
