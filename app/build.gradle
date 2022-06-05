@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
+    id 'com.google.secrets_gradle_plugin' version "0.5"
 }
 
 android {
@@ -74,8 +75,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 
     //Dagger
-    implementation 'com.google.dagger:dagger-android:2.40.5'
-    implementation 'com.google.dagger:dagger-android-support:2.26' // if you use the support libraries
+    implementation 'com.google.dagger:dagger-android:2.41'
+    implementation 'com.google.dagger:dagger-android-support:2.41' // if you use the support libraries
     kapt 'com.google.dagger:dagger-android-processor:2.40.5'
     kapt 'com.google.dagger:dagger-compiler:2.41'
 
@@ -92,7 +93,7 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:2.4.2"
     kapt "androidx.room:room-compiler:2.4.2"
-    
+
     //RxJava Support For Room
     implementation "androidx.room:room-rxjava2:2.4.2"
 
