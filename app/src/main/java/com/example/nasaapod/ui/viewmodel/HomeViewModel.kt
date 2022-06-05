@@ -1,5 +1,6 @@
 package com.example.nasaapod.ui.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nasaapod.ui.data.ApodViewState
@@ -13,17 +14,20 @@ class HomeViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun getTodayContent(): MutableLiveData<ApodViewState> {
-        val newsListLiveData = MutableLiveData<ApodViewState>()
+    private val datePeriodContentMutableLiveData = MutableLiveData<ApodViewState>()
+    val datePeriodLiveData : LiveData<ApodViewState> = datePeriodContentMutableLiveData
 
+    fun getContentByDatePeriod(
+        startDate: String,
+        endDate: String
+    ) {
         compositeDisposable.add(
             homeRepository
-                .getTodayContent()
+                .getContentByDatePeriod(startDate, endDate)
                 .subscribe {
                     println("Thread Info : " + Thread.currentThread())
-                    newsListLiveData.postValue(it)
+                    datePeriodContentMutableLiveData.postValue(it)
                 })
-        return newsListLiveData
     }
 
     override fun onCleared() {

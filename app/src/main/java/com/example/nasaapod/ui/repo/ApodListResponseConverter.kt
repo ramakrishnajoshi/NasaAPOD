@@ -6,24 +6,24 @@ import com.example.nasaapod.ui.data.response.ApiApod
 import com.example.nasaapod.utils.ErrorType
 import io.reactivex.functions.Function
 
-class ApodResponseConverter : Function<ApiApod, ApodViewState> {
+class ApodListResponseConverter : Function<List<ApiApod>, ApodViewState> {
 
-    override fun apply(response: ApiApod): ApodViewState {
-        response?.let {
-            if (it.error?.code?.isNotEmpty() == true) {
-                return ApodViewState.Error(
-                    ErrorType.API_ERROR,
-                    it.error?.code + it.error?.message
-                )
-            }
-            val data = convertData(it)
-            return ApodViewState.Success(listOf(data))
+    override fun apply(response: List<ApiApod>): ApodViewState {
+        if (response.isNullOrEmpty()) {
+            return ApodViewState.NoData
         }
-
-        return ApodViewState.NoData
+        val data = ArrayList<ApodData>()
+        response.forEach {
+            data.add(convertData(it))
+        }
+        return ApodViewState.Success(data)
     }
 
     private fun convertData(singleDayResponse: ApiApod) : ApodData {
+        var thumbnailUrl = singleDayResponse.url.orEmpty()
+        if (singleDayResponse.isYoutubeVideo()) {
+            thumbnailUrl = "https://img.youtube.com/vi/${singleDayResponse.getYoutubeID()}/0.jpg"
+        }
         return ApodData(
             copyright = singleDayResponse.copyright.orEmpty(),
             date = singleDayResponse.date.orEmpty(),
@@ -31,7 +31,7 @@ class ApodResponseConverter : Function<ApiApod, ApodViewState> {
             hdUrl = singleDayResponse.hdUrl.orEmpty(),
             mediaType = singleDayResponse.mediaType.orEmpty(),
             title = singleDayResponse.title.orEmpty(),
-            url = singleDayResponse.url.orEmpty()
+            thumbnailUrl = thumbnailUrl
         )
     }
 }

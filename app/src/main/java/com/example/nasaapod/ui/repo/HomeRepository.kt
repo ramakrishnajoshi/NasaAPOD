@@ -13,16 +13,16 @@ import javax.inject.Inject
 
 class HomeRepository @Inject constructor(
     private val apiHome: ApiHome,
-    private val apodResponseConverter: ApodResponseConverter
+    private val apodListResponseConverter: ApodListResponseConverter
 ) {
 
-    fun getTodayContent() : Observable<ApodViewState> {
+    fun getContentByDatePeriod(startDate: String, endDate: String): Observable<ApodViewState> {
         val loadingViewState = ApodViewState.ShowLoading
 
         return apiHome
-            .getTodayContent()
+            .getContentByDatePeriod(startDate, endDate)
             .subscribeOn(Schedulers.io())
-            .map(apodResponseConverter)
+            .map(apodListResponseConverter)
             .toObservable()
             .startWith(loadingViewState)
             .onErrorResumeNext { t: Throwable -> Observable.just(convertToCause(t)) }

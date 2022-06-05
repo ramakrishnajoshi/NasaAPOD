@@ -13,5 +13,5 @@ data class ApodData(
     val hdUrl: String,
     val mediaType: String,
     val title: String,
-    val url: String,
+    val thumbnailUrl: String,
 ) : Parcelable

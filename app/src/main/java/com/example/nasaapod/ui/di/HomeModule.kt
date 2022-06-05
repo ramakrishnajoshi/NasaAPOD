@@ -1,7 +1,7 @@
 package com.example.nasaapod.ui.di
 
 import com.example.nasaapod.ui.api.ApiHome
-import com.example.nasaapod.ui.repo.ApodResponseConverter
+import com.example.nasaapod.ui.repo.ApodListResponseConverter
 import com.example.nasaapod.ui.repo.HomeRepository
 import dagger.Module
 import dagger.Provides
@@ -13,14 +13,14 @@ class HomeModule {
     @Provides
     fun providesHomeRepository(
         apiHome: ApiHome,
-        converter: ApodResponseConverter
+        apodListResponseConverter: ApodListResponseConverter
     ) : HomeRepository {
-        return HomeRepository(apiHome, converter)
+        return HomeRepository(apiHome, apodListResponseConverter)
     }
 
     @Provides
-    fun providesApodResponseConverter() : ApodResponseConverter {
-        return ApodResponseConverter()
+    fun providesApodListResponseConverter() : ApodListResponseConverter {
+        return ApodListResponseConverter()
     }
 
     @Provides
