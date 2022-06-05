@@ -5,4 +5,12 @@
 
     <string name="nav_title_home">Home</string>
     <string name="nav_title_favorite">Favorite</string>
+
+    <!--API Error Cases-->
+    <string name="no_internet">No Internet</string>
+    <string name="timeout">Could not reach our servers. Please try again.</string>
+    <string name="server_error">Server Error. Something Went Wrong.</string>
+    <string name="error_unexpected_json">Server Error. Unexpected Json.</string>
+    <string name="unknown_error">Unknown Error. Please try again.</string>
+    <string name="string_null_or_empty_response">Data Not Found. Empty Response.</string>
 </resources>
