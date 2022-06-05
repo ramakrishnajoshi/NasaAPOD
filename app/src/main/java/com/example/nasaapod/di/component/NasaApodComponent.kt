@@ -2,7 +2,7 @@ package com.example.nasaapod.di.component
 
 import android.app.Application
 import com.example.nasaapod.app.NasaApodApplication
-import com.example.nasaapod.di.module.ActivityBuilderModule
+import com.example.nasaapod.di.module.ActivityAndFragmentBuilderModule
 import com.example.nasaapod.di.module.ApiModule
 import com.example.nasaapod.di.module.AppModule
 import com.example.nasaapod.di.module.viewmodel.ViewModelFactoryModule
@@ -17,10 +17,9 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
-        ActivityBuilderModule::class,
+        ActivityAndFragmentBuilderModule::class,
         ApiModule::class,
         AppModule::class,
-        ActivityBuilderModule::class,
         ViewModelFactoryModule::class
     ]
 )

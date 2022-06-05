@@ -2,18 +2,29 @@ package com.example.nasaapod.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.nasaapod.R
 import com.example.nasaapod.databinding.ActivityHomeBinding
+import com.example.nasaapod.di.factory.ViewModelFactory
+import com.example.nasaapod.ui.viewmodel.HomeViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
 class HomeActivity : DaggerAppCompatActivity() {
 
     private lateinit var navController : NavController
     private var currentFragmentId: Int = 0
     private lateinit var binding: ActivityHomeBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel : HomeViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
