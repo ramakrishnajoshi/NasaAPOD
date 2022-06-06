@@ -74,34 +74,27 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
             R.id.menu_item_date_picker -> {
                 val datePicker =
                     MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Select date")
+                        .setTitleText(getString(R.string.select_date))
                         .setCalendarConstraints(
                             CalendarConstraints.Builder()
                                 .setValidator(DateValidatorPointBackward.now()).build()
                         )
                         .build()
                 datePicker.addOnPositiveButtonClickListener {
-                    val utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-                    utc.timeInMillis = it
-                    val format = SimpleDateFormat(API_DATE_FORMAT)
-                    val formatted: String = format.format(utc.time)
-
-
-
-
-                    viewModel.getContentByDatePeriodFromDatabase(formatted, formatted)
+                    val formattedDate = AppUtils.convertMillisToStringDate(it)
+                    activity?.let { it.title = getString(R.string.home_fragment) }
+                    viewModel.getContentByDatePeriodFromDatabase(formattedDate, formattedDate, true)
                 }
                 datePicker.show(this.childFragmentManager, "datePicker")
             }
             R.id.menu_item_clear_date -> {
                 homeAdapter.submitList(null)
-                viewModel.getContentByDatePeriodFromDatabase(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+                viewModel.getContentByDatePeriodFromDatabase(
+                    AppUtils.getSevenDaysBackDate(),
+                    AppUtils.getCurrentDate(),
+                    true
+                )
             }
-            /*R.id.menu_item_settings -> {
-                val action: NavDirections =
-                    HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-                findNavController().navigate(action)
-            }*/
         }
         return true
     }
@@ -124,7 +117,7 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
     }
 
     /**
-     * Allow us to update the network availability of the HomeViewModel thanks to a live data, which
+     * Allows us to update the network availability of the HomeViewModel thanks to a live data, which
      * listen to network modification.
      */
     private fun handleNetworkAvailability() {
@@ -160,10 +153,9 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
                 showErrorViewState(viewState.errorType, viewState.message)
             }
         }
-        with(binding) {
-            if (swipeRefreshLayout.isRefreshing) {
-                swipeRefreshLayout.isRefreshing = false
-            }
+
+        if (binding.swipeRefreshLayout.isRefreshing) {
+            binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -198,10 +190,12 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
             when(errorType) {
                 ErrorType.NO_INTERNET_CONNECTION -> {
                     imageViewState.setAnimation(R.raw.lottie_no_internet)
-                    buttonStateAction.text = "Retry"
+                    imageViewState.playAnimation()
+                    buttonStateAction.text = getString(R.string.button_text_retry)
                 }
                 else -> {
                     imageViewState.setAnimation(R.raw.lottie_generic_error)
+                    imageViewState.playAnimation()
                 }
             }
             textViewStateTitle.text = errorType.name
@@ -219,11 +213,6 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
         homeAdapter.submitList(data)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     override fun onApodItemClick(apodData: ApodData) {
         val bundle = bundleOf(
             BUNDLE_KEY_SELECTED_APOD_DETAIL to apodData
@@ -233,5 +222,10 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
 
     override fun onApodFavouriteIconClick(apodData: ApodData) {
         viewModel.setFavorite(apodData)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

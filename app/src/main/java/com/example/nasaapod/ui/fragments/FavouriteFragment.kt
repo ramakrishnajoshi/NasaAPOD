@@ -43,6 +43,9 @@ class FavouriteFragment : DaggerFragment(), ApodClickListener {
     ): View? {
         _binding = FragmentFavouriteBinding.inflate(inflater, container, false)
         val view = binding.root
+        activity?.let {
+            it.title = getString(R.string.favorite_fragment_toolbar_title)
+        }
         return view
     }
 
@@ -76,7 +79,9 @@ class FavouriteFragment : DaggerFragment(), ApodClickListener {
             recyclerViewPhotos.visibility = View.GONE
             linearLayoutStateContainer.visibility = View.VISIBLE
             imageViewState.setAnimation(R.raw.lottie_no_favourites_found)
+            imageViewState.playAnimation()
             textViewStateTitle.text = getString(R.string.no_favourites_found)
+            textViewStateDescription.visibility = View.GONE
             buttonStateAction.visibility = View.GONE
         }
     }

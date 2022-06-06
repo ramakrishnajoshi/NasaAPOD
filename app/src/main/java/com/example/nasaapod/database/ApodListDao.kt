@@ -15,16 +15,12 @@ interface ApodListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertApodList(apodList : List<ApodData>)
 
-    @Query(value = "SELECT * FROM $TABLE_NAME_APOD")
-    //fun getNewsList() : LiveData<List<NewsData>>
-    fun getApodList() : Flowable<List<ApodData>> //Flowable is a observable data source
-    //We have wrapped the return type of method with Flowable to convert the data to a reactive stream
-    //fun getNewsList() : Observable<List<NewsData>>
+    @Query(value = "SELECT * FROM $TABLE_NAME_APOD order by date desc")
+    fun getApodList() : Flowable<List<ApodData>>
 
-    @Query("SELECT * FROM $TABLE_NAME_APOD where isFavourite=1 order by date desc")
+    @Query("SELECT * FROM $TABLE_NAME_APOD where isFavourite=1")
     fun getFavoriteApodList(): Flowable<List<ApodData>>
 
-    //@Insert(onConflict = OnConflictStrategy.REPLACE)
     @Update(entity = ApodData::class, onConflict = OnConflictStrategy.REPLACE)
     fun setFavorite(apod : ApodData)
 

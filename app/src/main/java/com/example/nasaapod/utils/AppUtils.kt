@@ -2,9 +2,12 @@ package com.example.nasaapod.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
+
 
 class AppUtils {
 
@@ -32,10 +35,18 @@ class AppUtils {
             val currentDate = Date()
             val calendar = Calendar.getInstance()
             calendar.time = currentDate
-            calendar.add(Calendar.DAY_OF_YEAR, -7)
+            calendar.add(Calendar.DAY_OF_YEAR, -6)
             val newDate = calendar.time
             val sdf = SimpleDateFormat(AppConstants.API_DATE_FORMAT)
             val formattedDate = sdf.format(newDate)
+            return formattedDate
+        }
+
+        fun convertMillisToStringDate(date: Long) : String {
+            val utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            utc.timeInMillis = date
+            val format = SimpleDateFormat(AppConstants.API_DATE_FORMAT)
+            val formattedDate: String = format.format(utc.time)
             return formattedDate
         }
 
@@ -48,6 +59,11 @@ class AppUtils {
                 return date.time
             }
             return -1
+        }
+
+        fun isAppInstalled(packageManager: PackageManager, packageName: String): Boolean {
+            val mIntent: Intent? = packageManager.getLaunchIntentForPackage(packageName)
+            return mIntent != null
         }
     }
 }

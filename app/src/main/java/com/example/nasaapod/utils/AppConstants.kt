@@ -10,5 +10,6 @@ class AppConstants {
         const val TABLE_NAME_APOD = "table_apod"
         const val DATABASE_NAME_APOD = "apod_list_db"
         const val BUNDLE_KEY_SELECTED_APOD_DETAIL = "SELECTED_APOD_DETAIL"
+        const val YOUTUBE_PACKAGE_NAME = "com.google.android.youtube"
     }
 }

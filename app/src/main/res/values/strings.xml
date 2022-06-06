@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">NasaAPOD</string>
-    <string name="home_fragment">Welcome</string>
+    <string name="home_fragment">Welcome to APOD</string>
     <string name="cd_home">Home fragment</string>
     <string name="ch_favorite">Favorite fragment</string>
 
     <string name="nav_title_home">Home</string>
-    <string name="nav_title_favorite">Favorite</string>
+    <string name="nav_title_favorite">Favorites</string>
+    <string name="favorite_fragment_toolbar_title">Your Favorite APODs</string>
 
     <!--API Error Cases-->
     <string name="no_internet">No Internet</string>
@@ -16,6 +17,8 @@
     <string name="string_null_or_empty_response">Data Not Found. Empty Response.</string>
 
     <string name="home_activity_loading_title">Loading</string>
+    <string name="no_data_connect_to_internet">No Local Data Found</string>
+    <string name="no_data_connect_to_internet_description">Please connect to internet.</string>
     <string name="home_activity_loading_description">A request has been launched, please wait until it succeed.</string>
     <string name="no_favourites_found">No Favourites Found</string>
 
@@ -25,5 +28,6 @@
     <string name="image_description_apod_detail">Apod Image</string>
     <string name="apod_detail_page_title">APOD Description</string>
     <string name="apod_detail_page_photo">Photo Taken On : %s </string>
-
+    <string name="button_text_retry">Retry</string>
+    <string name="select_date">Select date</string>
 </resources>

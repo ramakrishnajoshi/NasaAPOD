@@ -18,21 +18,26 @@ class HomeViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     private val datePeriodContentMutableLiveData = MutableLiveData<ApodViewState>()
-    val datePeriodLiveData : LiveData<ApodViewState> = datePeriodContentMutableLiveData
+    val datePeriodLiveData: LiveData<ApodViewState> = datePeriodContentMutableLiveData
 
     private val favouritesApodsMutableLiveData = MutableLiveData<List<ApodData>>()
-    val favouriteApodsLiveData : LiveData<List<ApodData>> = favouritesApodsMutableLiveData
+    val favouriteApodsLiveData: LiveData<List<ApodData>> = favouritesApodsMutableLiveData
 
     private val isNetworkAvailable = MutableLiveData<Boolean>()
     private val databaseContent = MutableLiveData<List<ApodData>>()
+
+    init {
+        connectToRoomDb()
+    }
 
     fun setNetworkAvailability(isConnected: Boolean) {
         isNetworkAvailable.value = isConnected
     }
 
-    fun getContentByDatePeriod(
+    private fun getContentByDatePeriod(
         startDate: String,
-        endDate: String
+        endDate: String,
+        shouldClearDatabase: Boolean
     ) {
         compositeDisposable.add(
             homeRepository
@@ -41,7 +46,7 @@ class HomeViewModel @Inject constructor(
                     println("Thread Info : " + Thread.currentThread())
                     datePeriodContentMutableLiveData.postValue(it)
                     if (it is ApodViewState.Success) {
-                        saveApodListInDatabase(it.data)
+                        saveApodListInDatabase(it.data, shouldClearDatabase)
                     }
                 })
     }
@@ -49,13 +54,13 @@ class HomeViewModel @Inject constructor(
     fun getContentByDatePeriodFromDatabase(
         startDate: String,
         endDate: String,
-        isRefreshNeeded: Boolean = true
+        shouldClearDatabase: Boolean = false
     ) {
         val isConnected: Boolean = isNetworkAvailable.value ?: false
         val isDatabaseEmpty: Boolean = databaseContent.value.isNullOrEmpty()
 
-        if (isConnected && isRefreshNeeded) {
-            getContentByDatePeriod(startDate, endDate)
+        if (isConnected) {
+            getContentByDatePeriod(startDate, endDate, shouldClearDatabase)
         } else {
             if (isDatabaseEmpty) {
                 datePeriodContentMutableLiveData.postValue(ApodViewState.Error(ErrorType.NO_INTERNET_CONNECTION))
@@ -65,24 +70,20 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+    private fun connectToRoomDb() {
         compositeDisposable.add(
             homeRepository
                 .getContentByDatePeriodFromDatabase()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    /*val isDatabaseEmpty = it.isEmpty()
-                    if (isConnected == false) {
-                        if (isDatabaseEmpty) {
-                            datePeriodContentMutableLiveData.postValue(ApodViewState.Error(ErrorType.NO_INTERNET_CONNECTION))
-                        } else {
-                            datePeriodContentMutableLiveData.postValue(ApodViewState.Success(it))
-                        }
+                    if (it.isEmpty()) {
+                        datePeriodContentMutableLiveData.postValue(ApodViewState.Error(ErrorType.NO_INTERNET_CONNECTION))
                     } else {
-                        getContentByDatePeriod(startDate, endDate)
-                    }*/
+                        datePeriodContentMutableLiveData.postValue(ApodViewState.Success(it))
+                    }
                     databaseContent.postValue(it)
-                    datePeriodContentMutableLiveData.postValue(ApodViewState.Success(it))
                 })
     }
 
@@ -96,15 +97,19 @@ class HomeViewModel @Inject constructor(
                 })
     }
 
-     fun saveApodListInDatabase(apodList: List<ApodData>) {
-         val existingDbContent = ArrayList<ApodData>()
-         databaseContent.value?.let {
-             existingDbContent.addAll(it)
-         }
+    fun saveApodListInDatabase(
+        apodList: List<ApodData>,
+        shouldClearDatabase: Boolean
+    ) {
+        val existingDbContent = ArrayList<ApodData>()
+        databaseContent.value?.let {
+            existingDbContent.addAll(it)
+        }
         compositeDisposable.add(
             homeRepository.saveApodListInDatabase(
                 apodList,
-                existingDbContent
+                existingDbContent,
+                shouldClearDatabase
             ).subscribe()
         )
     }

@@ -9,5 +9,6 @@
     <dimen name="padding_8dp">8dp</dimen>
     <dimen name="textSize_20sp">20sp</dimen>
     <dimen name="apod_detail_description_min_height">555dp</dimen>
+    <dimen name="dimen_32dp">32dp</dimen>
 
 </resources>

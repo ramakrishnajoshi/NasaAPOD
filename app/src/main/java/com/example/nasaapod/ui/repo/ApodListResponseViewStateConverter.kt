@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ApodListResponseConverter : Function<List<ApiApod>, ApodViewState> {
+class ApodListResponseViewStateConverter : Function<List<ApiApod>, ApodViewState> {
 
     override fun apply(response: List<ApiApod>): ApodViewState {
         if (response.isNullOrEmpty()) {
@@ -30,11 +30,17 @@ class ApodListResponseConverter : Function<List<ApiApod>, ApodViewState> {
         if (singleDayResponse.isYoutubeVideo()) {
             thumbnailUrl = "https://img.youtube.com/vi/${singleDayResponse.getYoutubeID()}/0.jpg"
         }
+
+        val hdUrl = if (singleDayResponse.hdUrl.isNullOrEmpty()) {
+            singleDayResponse.url.orEmpty()
+        } else {
+            singleDayResponse.hdUrl.orEmpty()
+        }
         return ApodData(
             copyright = singleDayResponse.copyright.orEmpty(),
             date = singleDayResponse.date.orEmpty(),
             explanation = singleDayResponse.explanation.orEmpty(),
-            hdUrl = singleDayResponse.hdUrl.orEmpty(),
+            hdUrl = hdUrl,
             mediaType = singleDayResponse.mediaType.orEmpty(),
             title = singleDayResponse.title.orEmpty(),
             thumbnailUrl = thumbnailUrl,

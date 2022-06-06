@@ -7,15 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.example.nasaapod.R
 import com.example.nasaapod.databinding.ItemHomeApodBinding
 import com.example.nasaapod.ui.data.ApodData
-import com.example.nasaapod.ui.repo.MediaType
 
 class HomeAdapter(private val apodItemClickListener: ApodClickListener) :
     ListAdapter<ApodData, HomeAdapter.HomeViewHolder>(diffUtil) {
 
-    inner class HomeViewHolder(val itemBinding: ItemHomeApodBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    inner class HomeViewHolder(val itemBinding: ItemHomeApodBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
         fun bindData(data: ApodData) {
 
             itemBinding.titleTxtView.text = data.title
@@ -33,21 +34,19 @@ class HomeAdapter(private val apodItemClickListener: ApodClickListener) :
 
             if (data.isFavourite) {
                 itemBinding.favoriteImgView.setAnimation(R.raw.lottie_favourite)
+                itemBinding.favoriteImgView.playAnimation()
             } else {
                 itemBinding.favoriteImgView.setImageResource(R.drawable.ic_favorite_border)
             }
 
-            /*if (data.mediaType == MediaType.VIDEO.type) {
-                itemBinding.webView.visibility = View.VISIBLE
-                itemBinding.imageImgView.visibility = View.GONE
-            } else */
+            Glide
+                .with(itemView)
+                .load(data.thumbnailUrl)
+                .placeholder(R.drawable.ic_type_image)
+                .priority(Priority.HIGH)
+                .into(itemBinding.imageImgView)
 
-                itemBinding.webView.visibility = View.GONE
-                itemBinding.imageImgView.visibility = View.VISIBLE
-                Glide.with(itemView).load(data.thumbnailUrl).into(itemBinding.imageImgView)
-
-
-            itemView.setOnClickListener {
+            itemBinding.root.setOnClickListener {
                 apodItemClickListener.onApodItemClick(data)
             }
         }
@@ -68,7 +67,7 @@ class HomeAdapter(private val apodItemClickListener: ApodClickListener) :
 
 val diffUtil = object : DiffUtil.ItemCallback<ApodData>() {
     override fun areItemsTheSame(oldItem: ApodData, newItem: ApodData): Boolean {
-        return oldItem.date == newItem.date
+        return oldItem.dateInMillis == newItem.dateInMillis
     }
 
     override fun areContentsTheSame(oldItem: ApodData, newItem: ApodData): Boolean {
