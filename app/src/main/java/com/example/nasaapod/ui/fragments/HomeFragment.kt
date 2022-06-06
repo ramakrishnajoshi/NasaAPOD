@@ -146,7 +146,7 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
                 showSuccessViewState(viewState.data)
             }
             ApodViewState.NoData -> {
-
+                hideLoadingViewState()
             }
             is ApodViewState.Error -> {
                 hideLoadingViewState()

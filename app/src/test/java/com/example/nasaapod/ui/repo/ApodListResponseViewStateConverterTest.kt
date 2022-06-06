@@ -20,9 +20,9 @@ class ApodListResponseViewStateConverterTest {
     }
 
     @Test
-    fun `should convert list of api lineitems to cart items`() {
+    fun `should convert list of apiApod items to apodData items`() {
         val convertedViewState = converter.apply(getMockApiApodItems())
-        val expectedViewState = listOf(
+        val expectedData = listOf(
             ApodData(
                 1654021800000,
                 "2022-06-01",
@@ -46,7 +46,15 @@ class ApodListResponseViewStateConverterTest {
                 false
             )
         )
-        Truth.assertThat(convertedViewState).isEqualTo(ApodViewState.Success(expectedViewState))
+        val expectedViewState = ApodViewState.Success(expectedData)
+        Truth.assertThat(convertedViewState).isEqualTo(expectedViewState)
+    }
+
+    @Test
+    fun `should convert empty apiApod items response to NoData ViewState`() {
+        val convertedViewState = converter.apply(emptyList<ApiApod>())
+        val expectedViewState = ApodViewState.NoData
+        Truth.assertThat(convertedViewState).isEqualTo(expectedViewState)
     }
 
     private fun getMockApiApodItems(): MutableList<ApiApod> {
