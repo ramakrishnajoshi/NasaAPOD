@@ -3,7 +3,6 @@ package com.example.nasaapod.ui.repo
 import com.example.nasaapod.ui.data.ApodData
 import com.example.nasaapod.ui.data.ApodViewState
 import com.example.nasaapod.ui.data.response.ApiApod
-import com.example.nasaapod.utils.AppConstants.Companion.EMPTY_STRING
 import com.google.common.truth.Truth
 import org.junit.Before
 import org.junit.Test
@@ -12,11 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class ApodListResponseViewStateConverterTest {
-
-    companion object {
-        private const val MOCK_BASE_URL = "https://www.falabella.com/"
-        private const val MOCK_COUNTRY_CODE = "CL"
-    }
 
     private lateinit var converter: ApodListResponseViewStateConverter
 
