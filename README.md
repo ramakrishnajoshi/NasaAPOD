@@ -7,6 +7,7 @@ This repository uses below concepts to call and cache NASA's Apod API.
 3. RxJava and Retrofit
 4. Recyclerview, ListAdapter and DiffUtil
 5. Jetpack Navigation Component
+6. GitHub Actions CI
 
 
 Note : Please add below line to local.properties file to add API key. 
