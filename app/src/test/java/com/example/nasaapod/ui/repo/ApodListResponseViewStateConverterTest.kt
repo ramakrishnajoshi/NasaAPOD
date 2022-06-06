@@ -19,7 +19,6 @@ class ApodListResponseViewStateConverterTest {
         converter = ApodListResponseViewStateConverter()
     }
 
-
     @Test
     fun `should convert list of api lineitems to cart items`() {
         val convertedViewState = converter.apply(getMockApiApodItems())
@@ -49,8 +48,6 @@ class ApodListResponseViewStateConverterTest {
         )
         Truth.assertThat(convertedViewState).isEqualTo(ApodViewState.Success(expectedViewState))
     }
-
-
 
     private fun getMockApiApodItems(): MutableList<ApiApod> {
         return mutableListOf(
