@@ -3,6 +3,7 @@ package com.example.nasaapod.ui.di
 import com.example.nasaapod.ui.api.ApiHome
 import com.example.nasaapod.ui.repo.ApodListResponseConverter
 import com.example.nasaapod.ui.repo.HomeRepository
+import com.example.newsapp.database.ApodListDatabase
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -13,9 +14,10 @@ class HomeModule {
     @Provides
     fun providesHomeRepository(
         apiHome: ApiHome,
-        apodListResponseConverter: ApodListResponseConverter
+        apodListResponseConverter: ApodListResponseConverter,
+        apodListDatabase: ApodListDatabase
     ) : HomeRepository {
-        return HomeRepository(apiHome, apodListResponseConverter)
+        return HomeRepository(apiHome, apodListResponseConverter, apodListDatabase)
     }
 
     @Provides

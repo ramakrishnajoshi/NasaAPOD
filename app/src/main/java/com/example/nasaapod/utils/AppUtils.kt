@@ -38,5 +38,16 @@ class AppUtils {
             val formattedDate = sdf.format(newDate)
             return formattedDate
         }
+
+        fun convertStringDatetoMillis(stringDate: String?): Long {
+            stringDate?.let {
+                val sdf = SimpleDateFormat(
+                    AppConstants.API_DATE_FORMAT,
+                    Locale.ENGLISH)
+                val date = sdf.parse(stringDate) as Date
+                return date.time
+            }
+            return -1
+        }
     }
 }

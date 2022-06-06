@@ -3,8 +3,14 @@ package com.example.nasaapod.ui.repo
 import com.example.nasaapod.ui.data.ApodData
 import com.example.nasaapod.ui.data.ApodViewState
 import com.example.nasaapod.ui.data.response.ApiApod
+import com.example.nasaapod.utils.AppConstants
+import com.example.nasaapod.utils.AppUtils
 import com.example.nasaapod.utils.ErrorType
 import io.reactivex.functions.Function
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ApodListResponseConverter : Function<List<ApiApod>, ApodViewState> {
 
@@ -31,7 +37,9 @@ class ApodListResponseConverter : Function<List<ApiApod>, ApodViewState> {
             hdUrl = singleDayResponse.hdUrl.orEmpty(),
             mediaType = singleDayResponse.mediaType.orEmpty(),
             title = singleDayResponse.title.orEmpty(),
-            thumbnailUrl = thumbnailUrl
+            thumbnailUrl = thumbnailUrl,
+            dateInMillis = AppUtils.convertStringDatetoMillis(singleDayResponse.date),
+            isFavourite = false
         )
     }
 }

@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -21,13 +22,17 @@ import com.example.nasaapod.ui.data.ApodData
 import com.example.nasaapod.ui.data.ApodViewState
 import com.example.nasaapod.ui.viewmodel.HomeViewModel
 import com.example.nasaapod.utils.AppConstants.Companion.API_DATE_FORMAT
+import com.example.nasaapod.utils.AppConstants.Companion.BUNDLE_KEY_SELECTED_APOD_DETAIL
 import com.example.nasaapod.utils.AppUtils
 import com.example.nasaapod.utils.ErrorType
 import com.example.nasaapod.utils.VerticalSpaceItemDecoration
+import com.example.nasaapod.utils.network.ConnectionLiveData
+import com.example.nasaapod.utils.network.NetworkHelper
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.android.support.DaggerFragment
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -45,6 +50,7 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
     private val binding get() = _binding!!
 
     private val homeAdapter = HomeAdapter(this)
+    private lateinit var connectionLiveData: ConnectionLiveData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,13 +85,17 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
                     utc.timeInMillis = it
                     val format = SimpleDateFormat(API_DATE_FORMAT)
                     val formatted: String = format.format(utc.time)
-                    viewModel.getContentByDatePeriod(formatted, formatted)
+
+
+
+
+                    viewModel.getContentByDatePeriodFromDatabase(formatted, formatted)
                 }
                 datePicker.show(this.childFragmentManager, "datePicker")
             }
             R.id.menu_item_clear_date -> {
                 homeAdapter.submitList(null)
-                viewModel.getContentByDatePeriod(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+                viewModel.getContentByDatePeriodFromDatabase(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
             }
             /*R.id.menu_item_settings -> {
                 val action: NavDirections =
@@ -99,22 +109,37 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        handleNetworkAvailability()
         configurePullToRefresh()
         setRecyclerView()
 
         viewModel.datePeriodLiveData.observe(viewLifecycleOwner, Observer { viewState ->
             processApiResponse(viewState)
         })
-        viewModel.getContentByDatePeriod( AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+        viewModel.getContentByDatePeriodFromDatabase( AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
 
         binding.buttonStateAction.setOnClickListener {
-            viewModel.getContentByDatePeriod(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+            viewModel.getContentByDatePeriodFromDatabase(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+        }
+    }
+
+    /**
+     * Allow us to update the network availability of the HomeViewModel thanks to a live data, which
+     * listen to network modification.
+     */
+    private fun handleNetworkAvailability() {
+        activity?.let {
+            connectionLiveData = ConnectionLiveData(it)
+            connectionLiveData.observe(viewLifecycleOwner) { hasNetworkAccess: Boolean ->
+                viewModel.setNetworkAvailability(hasNetworkAccess)
+            }
+            viewModel.setNetworkAvailability(NetworkHelper.isOnline(it))
         }
     }
 
     private fun configurePullToRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.getContentByDatePeriod(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
+            viewModel.getContentByDatePeriodFromDatabase(AppUtils.getSevenDaysBackDate(), AppUtils.getCurrentDate())
         }
     }
 
@@ -186,10 +211,8 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
     }
 
     private fun hideLoadingViewState() {
-        with(binding) {
-            recyclerViewPhotos.visibility = View.VISIBLE
-            linearLayoutStateContainer.visibility = View.GONE
-        }
+        binding.recyclerViewPhotos.visibility = View.VISIBLE
+        binding.linearLayoutStateContainer.visibility = View.GONE
     }
 
     private fun showSuccessViewState(data: List<ApodData>) {
@@ -201,7 +224,14 @@ class HomeFragment : DaggerFragment(), ApodClickListener {
         _binding = null
     }
 
-    override fun onApodItemClick(ApodData: ApodData) {
-        findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
+    override fun onApodItemClick(apodData: ApodData) {
+        val bundle = bundleOf(
+            BUNDLE_KEY_SELECTED_APOD_DETAIL to apodData
+        )
+        findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+    }
+
+    override fun onApodFavouriteIconClick(apodData: ApodData) {
+        viewModel.setFavorite(apodData)
     }
 }
