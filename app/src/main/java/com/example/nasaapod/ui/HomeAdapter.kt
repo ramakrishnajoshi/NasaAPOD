@@ -12,7 +12,7 @@ import com.example.nasaapod.databinding.ItemHomeApodBinding
 import com.example.nasaapod.ui.data.ApodData
 import com.example.nasaapod.ui.repo.MediaType
 
-class HomeAdapter(private val newsItemClickListener: ApodClickListener) :
+class HomeAdapter(private val apodItemClickListener: ApodClickListener) :
     ListAdapter<ApodData, HomeAdapter.HomeViewHolder>(diffUtil) {
 
     inner class HomeViewHolder(val itemBinding: ItemHomeApodBinding) : RecyclerView.ViewHolder(itemBinding.root) {
@@ -20,9 +20,23 @@ class HomeAdapter(private val newsItemClickListener: ApodClickListener) :
 
             itemBinding.titleTxtView.text = data.title
             itemBinding.favoriteImgView.setOnClickListener {
-                itemBinding.favoriteImgView.setAnimation(R.raw.lottie_favourite)
-                itemBinding.favoriteImgView.playAnimation()
+                if (data.isFavourite) {
+                    data.isFavourite = false
+                    itemBinding.favoriteImgView.setAnimation(R.raw.lottie_favourite)
+                } else {
+                    data.isFavourite = true
+                    itemBinding.favoriteImgView.setAnimation(R.raw.lottie_favourite)
+                    itemBinding.favoriteImgView.playAnimation()
+                }
+                apodItemClickListener.onApodFavouriteIconClick(data)
             }
+
+            if (data.isFavourite) {
+                itemBinding.favoriteImgView.setAnimation(R.raw.lottie_favourite)
+            } else {
+                itemBinding.favoriteImgView.setImageResource(R.drawable.ic_favorite_border)
+            }
+
             /*if (data.mediaType == MediaType.VIDEO.type) {
                 itemBinding.webView.visibility = View.VISIBLE
                 itemBinding.imageImgView.visibility = View.GONE
@@ -34,7 +48,7 @@ class HomeAdapter(private val newsItemClickListener: ApodClickListener) :
 
 
             itemView.setOnClickListener {
-                newsItemClickListener.onApodItemClick(data)
+                apodItemClickListener.onApodItemClick(data)
             }
         }
     }
@@ -64,4 +78,5 @@ val diffUtil = object : DiffUtil.ItemCallback<ApodData>() {
 
 interface ApodClickListener {
     fun onApodItemClick(ApodData: ApodData)
+    fun onApodFavouriteIconClick(apodData: ApodData)
 }

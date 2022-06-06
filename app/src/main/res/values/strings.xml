@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">NasaAPOD</string>
+    <string name="home_fragment">Welcome</string>
     <string name="cd_home">Home fragment</string>
     <string name="ch_favorite">Favorite fragment</string>
 
@@ -13,4 +14,16 @@
     <string name="error_unexpected_json">Server Error. Unexpected Json.</string>
     <string name="unknown_error">Unknown Error. Please try again.</string>
     <string name="string_null_or_empty_response">Data Not Found. Empty Response.</string>
+
+    <string name="home_activity_loading_title">Loading</string>
+    <string name="home_activity_loading_description">A request has been launched, please wait until it succeed.</string>
+    <string name="no_favourites_found">No Favourites Found</string>
+
+    <string name="action_select_date">Select Date</string>
+    <string name="action_clear_date">Clear Date Selection</string>
+
+    <string name="image_description_apod_detail">Apod Image</string>
+    <string name="apod_detail_page_title">APOD Description</string>
+    <string name="apod_detail_page_photo">Photo Taken On : %s </string>
+
 </resources>

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="app_bar_height_apod_detail">400dp</dimen>
+    <dimen name="elevation_toolbar_apod_detail">5dp</dimen>
+    <dimen name="fab_padding_bottom_to_avoid_text_overlap">68dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="textSize_20sp">20sp</dimen>
+    <dimen name="apod_detail_description_min_height">555dp</dimen>
 
 </resources>

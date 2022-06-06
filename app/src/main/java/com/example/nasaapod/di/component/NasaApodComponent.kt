@@ -5,6 +5,7 @@ import com.example.nasaapod.app.NasaApodApplication
 import com.example.nasaapod.di.module.ActivityAndFragmentBuilderModule
 import com.example.nasaapod.di.module.ApiModule
 import com.example.nasaapod.di.module.AppModule
+import com.example.nasaapod.di.module.DatabaseBuilderModule
 import com.example.nasaapod.di.module.viewmodel.ViewModelFactoryModule
 import dagger.BindsInstance
 import dagger.Component
@@ -20,7 +21,8 @@ import javax.inject.Singleton
         ActivityAndFragmentBuilderModule::class,
         ApiModule::class,
         AppModule::class,
-        ViewModelFactoryModule::class
+        ViewModelFactoryModule::class,
+        DatabaseBuilderModule::class
     ]
 )
 interface NasaApodComponent: AndroidInjector<NasaApodApplication> {
