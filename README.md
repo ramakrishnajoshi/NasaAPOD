@@ -12,7 +12,7 @@ This repository uses below concepts to call and cache NASA's Apod API.
 
 Note : Please add below line to local.properties file to add API key. 
 
-API_KEY_APOD="DcTxwgj8kAFiHOUOVs47KeymyKFvTOlvKnMtqO1u"
+API_KEY_APOD="key_is_sent_via_email"
 
 
 App Screenshots:
